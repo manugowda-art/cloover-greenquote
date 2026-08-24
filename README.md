@@ -112,17 +112,7 @@ See [Architecture](docs/architecture.md).
 * Financing offers are stored as immutable JSON derived from each quote rather than normalized into another table.
 
 More detail: [Architecture & Decisions](docs/architecture.md).
-
-## What I Would Do Next
-
-Given more time:
-
-* postgreSQL for production
-* authentication rate limiting and stronger session lifecycle
-* CI/CD
-* centralized logging and metrics
-* broader E2E coverage
-* amortization schedule
+See [What I Would Do Next](docs/architecture.md#what-i-would-do-next)
 
 ## Documentation
 
