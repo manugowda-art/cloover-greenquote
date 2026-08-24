@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { db } from "@/lib/db";
 import { logger } from "@/lib/logger";
-import { requireUser } from "@/lib/auth";
+import { requireUser, UnauthorizedError } from "@/lib/auth";
 import { quoteSchema } from "@/lib/validation/quote";
 import { calculateQuote } from "@/lib/pricing";
 import { Quote } from "@/generated/prisma/client";
@@ -72,7 +72,17 @@ export async function POST(request: Request) {
             "Quote creation failed"
         );
 
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        if (error instanceof UnauthorizedError) {
+            return NextResponse.json(
+                { error: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        return NextResponse.json(
+            { error: "Internal server error" },
+            { status: 500 }
+        );
     }
 }
 

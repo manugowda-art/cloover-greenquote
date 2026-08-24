@@ -50,8 +50,8 @@ export function calculateQuote(input: QuoteInput): QuoteCalculation {
         const numberOfPayments = termYears * 12;
         const monthlyRate = apr / 12;
 
-        const intrestRate = Math.pow(1 + monthlyRate, numberOfPayments);
-        const monthlyPayment = principal === 0 ? 0 : principal * (monthlyRate * intrestRate) / (intrestRate - 1);
+        const growthFactor = Math.pow(1 + monthlyRate, numberOfPayments);
+        const monthlyPayment = principal === 0 ? 0 : principal * (monthlyRate * growthFactor) / (growthFactor - 1);
 
         return {
             termYears,

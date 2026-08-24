@@ -1,11 +1,11 @@
 import Link from "next/link";
 
 import { db } from "@/lib/db";
-import { requireUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/LogoutButton";
+import { requirePageUser } from "@/lib/page-auth";
 
 export default async function QuotesPage() {
-  const session = await requireUser();
+  const session = await requirePageUser();
 
   const quotes = await db.quote.findMany({
     where: {

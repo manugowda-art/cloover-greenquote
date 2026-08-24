@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
-import { requireAdmin } from "@/lib/auth";
+import { ForbiddenError, requireAdmin, UnauthorizedError } from "@/lib/auth";
 import { Quote } from "@/generated/prisma/client";
 
 export async function GET(request: Request) {
@@ -51,7 +51,18 @@ export async function GET(request: Request) {
                 offersJson: undefined,
             })),
         });
-    } catch {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    } catch (error) {
+        if (error instanceof UnauthorizedError) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        if (error instanceof ForbiddenError) {
+            return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        }
+
+        return NextResponse.json(
+            { error: "Internal server error" },
+            { status: 500 }
+        );
     }
 }

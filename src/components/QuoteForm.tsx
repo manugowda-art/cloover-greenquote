@@ -41,12 +41,14 @@ export function QuoteForm({ fullName, email }: QuoteFormProps) {
         try {
             data = await response.json();
 
-            if (!response.ok) {
-                setError(data.error ?? "Something went wrong");
-                return;
-            }
         } catch (error) {
-            setError((error as Error).message ?? "Something went wrong");
+            setError((error as Error).message ?? "Invalid server response");
+            return;
+        }
+
+        if (!response.ok) {
+            setError(data.error ?? "Something went wrong");
+            return;
         }
 
         router.push(`/quotes/${data.id}`);

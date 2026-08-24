@@ -106,7 +106,7 @@ export async function deleteSession() {
 export async function requireUser(): Promise<SessionPayload> {
     const session = await getSession();
     if (!session) {
-        throw new Error('Unauthorized: Valid session required');
+        throw new UnauthorizedError();
     }
     return session;
 }
@@ -115,8 +115,22 @@ export async function requireAdmin() {
     const user = await requireUser();
 
     if (user.role !== 'ADMIN') {
-        throw new Error('Forbidden: Admin access required');
+        throw new ForbiddenError();
     }
 
     return user;
+}
+
+export class UnauthorizedError extends Error {
+  constructor(message = "Unauthorized") {
+    super(message);
+    this.name = "UnauthorizedError";
+  }
+}
+
+export class ForbiddenError extends Error {
+  constructor(message = "Forbidden") {
+    super(message);
+    this.name = "ForbiddenError";
+  }
 }

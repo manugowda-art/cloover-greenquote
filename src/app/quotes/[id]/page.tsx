@@ -1,17 +1,17 @@
 import Link from "next/link";
 
 import { db } from "@/lib/db";
-import { requireUser } from "@/lib/auth";
 import { Quote, Role } from "@/generated/prisma/client";
 import { notFound, redirect } from "next/navigation";
-import { Offer } from "@/lib/pricing";
+import type { Offer } from "@/lib/pricing";
+import { requirePageUser } from "@/lib/page-auth";
 
 export default async function QuotePage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const session = await requireUser();
+  const session = await requirePageUser();
   const { id } = await params;
 
   const quote: Quote | null = await db.quote.findUnique({
@@ -31,10 +31,14 @@ export default async function QuotePage({
     quote.userId !== session.userId &&
     session.role !== Role.ADMIN
   ) {
-    redirect("/");
+    redirect("/forbidden");
   }
 
-  const offers = JSON.parse(quote.offersJson);
+  const offers = JSON.parse(quote.offersJson) as Offer[];
+  const primaryOffer = offers[0];
+
+  const principal = primaryOffer?.principalUsed ?? 0;
+  const apr = primaryOffer?.apr ?? 0;
 
   return (
     <main className="space-y-8">
@@ -76,7 +80,7 @@ export default async function QuotePage({
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
           <p className="text-sm text-zinc-400">Principal</p>
           <p className="mt-1 text-2xl font-semibold">
-            €{offers[0].principalUsed.toLocaleString("en-US", {
+            €{principal.toLocaleString("en-US", {
               minimumFractionDigits: 2,
             })}
           </p>
@@ -92,7 +96,7 @@ export default async function QuotePage({
         <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
           <p className="text-sm text-zinc-400">APR</p>
           <p className="mt-1 text-2xl font-semibold">
-            {(offers[0].apr * 100).toFixed(1)}%
+            {(apr * 100).toFixed(1)}%
           </p>
         </div>
       </div>

@@ -1,20 +1,15 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
-import { requireAdmin } from "@/lib/auth";
 import { LogoutButton } from "@/components/LogoutButton";
+import { requirePageAdmin } from "@/lib/page-auth";
 
 export default async function AdminQuotesPage({
   searchParams,
 }: {
   searchParams: Promise<{ search?: string }>;
 }) {
-  try {
-    await requireAdmin();
-  } catch {
-    redirect("/forbidden");
-  }
+  await requirePageAdmin();
 
   const { search } = await searchParams;
 

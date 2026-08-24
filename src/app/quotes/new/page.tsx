@@ -1,11 +1,11 @@
 import Link from "next/link";
 
 import { QuoteForm } from "@/components/QuoteForm";
-import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { requirePageUser } from "@/lib/page-auth";
 
 export default async function NewQuotePage() {
-  const session = await requireUser();
+  const session = await requirePageUser();
 
   const user = await db.user.findUniqueOrThrow({
     where: { id: session.userId },
