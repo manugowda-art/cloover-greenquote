@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GreenQuote
 
-## Getting Started
+Solar financing pre-qualification application built for the Cloover Full-Stack Coding Challenge.
 
-First, run the development server:
+## Stack
+
+Next.js · TypeScript · Prisma · SQLite · Zod · bcrypt · JWT · Pino · Vitest · Playwright
+
+## Quick Start
+
+Requirements:
+
+* Node.js 20+ (LTS)
+* npm
+* make
+
+Setup:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+make setup
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run all quality checks: lint → unit/integration tests → E2E → production build
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+make check
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Run:
 
-## Learn More
+```bash
+make dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+http://localhost:3000
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Seeded Admin
 
-## Deploy on Vercel
+```text
+Email: admin@test.com
+Password: admin12345
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Development credentials only.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Test
+
+Unit and integration tests:
+
+```bash
+make test
+```
+
+E2E:
+
+```bash
+make e2e
+```
+
+## API Documentation
+
+Interactive OpenAPI documentation:
+
+```text
+http://localhost:3000/api-docs
+```
+
+Health check:
+
+```text
+GET /api/health
+```
+
+## Main User Flows
+
+User:
+
+```text
+Register / Login
+→ Quotes
+→ New Quote
+→ Pre-qualification Result
+→ PDF Export
+```
+
+Admin:
+
+```text
+Login
+→ Admin Quotes
+→ Search by user
+→ View Quote
+→ PDF Export
+```
+
+## Architecture
+
+The application uses Next.js App Router for both frontend and backend.
+
+Business concerns are separated into authentication, validation, pricing, persistence, and logging modules.
+
+See [Architecture](docs/architecture.md).
+
+## Trade-offs
+
+* SQLite was chosen for a small workload and zero-infrastructure local setup. PostgreSQL would be preferred for horizontally scaled production workloads.
+* Authentication is implemented locally using signed JWT sessions instead of an external IdP such as Keycloak.
+* Financing offers are stored as immutable JSON derived from each quote rather than normalized into another table.
+
+More detail: [Architecture & Decisions](docs/architecture.md).
+
+## What I Would Do Next
+
+Given more time:
+
+* PostgreSQL for production
+* authentication rate limiting and stronger session lifecycle
+* CI/CD
+* centralized logging and metrics
+* broader E2E coverage
+* amortization schedule
+
+## Documentation
+
+* [Architecture](docs/architecture.md)
+* [Authentication & Authorization](docs/authentication.md)
+* [Testing](docs/testing.md)
+* [Operations & Observability](docs/operations.md)
+* [API Reference](docs/api.md)
