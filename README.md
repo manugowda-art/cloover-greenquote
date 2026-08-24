@@ -117,7 +117,7 @@ More detail: [Architecture & Decisions](docs/architecture.md).
 
 Given more time:
 
-* PostgreSQL for production
+* postgreSQL for production
 * authentication rate limiting and stronger session lifecycle
 * CI/CD
 * centralized logging and metrics
