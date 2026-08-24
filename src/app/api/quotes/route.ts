@@ -3,7 +3,8 @@ import { z } from "zod";
 
 import { db } from "@/lib/db";
 import { logger } from "@/lib/logger";
-import { requireUser, UnauthorizedError } from "@/lib/auth";
+import { requireUser } from "@/lib/auth";
+import { toErrorResponse } from "@/lib/api-error";
 import { quoteSchema } from "@/lib/validation/quote";
 import { calculateQuote } from "@/lib/pricing";
 import { Quote } from "@/generated/prisma/client";
@@ -62,31 +63,17 @@ export async function POST(request: Request) {
             { status: 201 }
         );
     } catch (error) {
-        logger.error(
-            {
-                err: error,
-                method: "POST",
-                path: "/api/quotes",
-                durationMs: Date.now() - startedAt,
-            },
-            "Quote creation failed"
-        );
-
-        if (error instanceof UnauthorizedError) {
-            return NextResponse.json(
-                { error: "Unauthorized" },
-                { status: 401 }
-            );
-        }
-
-        return NextResponse.json(
-            { error: "Internal server error" },
-            { status: 500 }
-        );
+        return toErrorResponse(error, {
+            method: "POST",
+            path: "/api/quotes",
+            startedAt,
+        });
     }
 }
 
 export async function GET() {
+    const startedAt = Date.now();
+
     try {
         const session = await requireUser();
 
@@ -106,7 +93,11 @@ export async function GET() {
                 offersJson: undefined,
             })),
         });
-    } catch {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    } catch (error) {
+        return toErrorResponse(error, {
+            method: "GET",
+            path: "/api/quotes",
+            startedAt,
+        });
     }
 }

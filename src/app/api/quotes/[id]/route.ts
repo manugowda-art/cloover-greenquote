@@ -2,12 +2,15 @@ import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
+import { toErrorResponse } from "@/lib/api-error";
 import { Quote, Role } from "@/generated/prisma/client";
 
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const startedAt = Date.now();
+
   try {
     const session = await requireUser();
     const { id } = await params;
@@ -49,7 +52,11 @@ export async function GET(
       offers: JSON.parse(quote.offersJson),
       offersJson: undefined,
     });
-  } catch {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  } catch (error) {
+    return toErrorResponse(error, {
+      method: "GET",
+      path: "/api/quotes/[id]",
+      startedAt,
+    });
   }
 }
