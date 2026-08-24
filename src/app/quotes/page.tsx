@@ -40,7 +40,7 @@ export default async function QuotesPage() {
           <p className="text-zinc-400">You have no quotes yet.</p>
 
           <Link
-            href="/"
+            href="/quotes/new"
             className="mt-4 inline-block text-sm text-emerald-400 hover:underline"
           >
             Create your first quote
