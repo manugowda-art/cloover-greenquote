@@ -20,7 +20,7 @@ Setup:
 make setup
 ```
 
-Run all quality checks: lint → unit/integration tests → E2E → production build
+Run all quality checks: lint → unit/integration tests → production build
 
 ```bash
 make check

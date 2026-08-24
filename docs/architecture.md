@@ -93,37 +93,8 @@ For this scope, the application both issues and verifies the token, so HS256 is 
 
 ## Observability
 
-Structured logging is implemented with Pino.
-
-Logs cover important request, response, authentication, quote creation, and error paths.
-
-Typical structured fields include:
-
-```text
-method
-path
-status
-durationMs
-userId
-quoteId
-err
-```
-
-Sensitive values such as passwords, password hashes, JWTs, and session cookies are never intentionally logged.
-
-Development logs are also written to:
-
-```text
-logs/app.log
-```
-
-The application provides:
-
-```text
-GET /api/health
-```
-
-for liveness monitoring.
+Structured logging (Pino), the health endpoint, configuration, and deployment
+notes are documented in [Operations & Observability](operations.md).
 
 ## Trade-offs
 
@@ -189,18 +160,20 @@ Additional production hardening would include:
 
 ## What I Would Do Next
 
+Delivered beyond the core requirements: OpenAPI documentation at `/api-docs`,
+a Playwright end-to-end test covering sign-in through quote results, and PDF
+export of a quote.
+
 Given more time, I would prioritize:
 
-1. Add Playwright E2E coverage for registration/login → quote creation → quote details.
-2. Add OpenAPI documentation.
-3. Add rate limiting to authentication endpoints.
-4. Improve session lifecycle and revocation.
-5. Add CI/CD running lint, tests, and production build.
-6. Move to PostgreSQL for a horizontally scaled production deployment.
-7. Add pagination to quote listings.
-8. Add richer observability and centralized log collection.
-9. Add amortization schedule details.
-10. Add PDF quote export.
+1. Rate limiting on the authentication endpoints.
+2. Session revocation and refresh, rather than a fixed one-hour token.
+3. CI/CD running lint, tests, and a production build on every push.
+4. PostgreSQL, for a horizontally scaled deployment.
+5. Pagination on the quote listings, which currently fetch every row.
+6. An amortization schedule per offer, surfaced in the UI and the PDF.
+7. Centralized log collection and request-level tracing.
+8. CSRF protection on state-changing endpoints.
 
 ## Production Deployment
 

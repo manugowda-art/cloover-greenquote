@@ -232,6 +232,51 @@ export const openapiSpec = {
           "200": {
             description: "Quote returned",
           },
+          "401": {
+            description: "Unauthorized",
+          },
+          "403": {
+            description: "Forbidden",
+          },
+          "404": {
+            description: "Quote not found",
+          },
+        },
+      },
+    },
+
+    "/api/quotes/{id}/pdf": {
+      get: {
+        summary: "Download a quote as PDF",
+        security: [{ sessionCookie: [] }],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            schema: {
+              type: "integer",
+            },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "PDF document",
+            content: {
+              "application/pdf": {
+                schema: {
+                  type: "string",
+                  format: "binary",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Invalid quote id",
+          },
+          "401": {
+            description: "Unauthorized",
+          },
           "403": {
             description: "Forbidden",
           },
@@ -259,6 +304,9 @@ export const openapiSpec = {
         responses: {
           "200": {
             description: "Quotes returned",
+          },
+          "401": {
+            description: "Unauthorized",
           },
           "403": {
             description: "Admin access required",

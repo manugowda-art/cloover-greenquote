@@ -40,3 +40,16 @@ Coverage includes:
 * Quote ownership
 * Admin access to another user's quote
 * Forbidden access for regular users
+* Error mapping: an expired session returns `401`, a database failure returns `500`
+
+### End-to-End
+
+Playwright covers sign-in → quote creation → results, asserting the computed
+monthly payments for all three terms:
+
+```bash
+npm run test:e2e
+```
+
+`make check` runs lint, the Vitest suite, and a production build. The E2E suite
+is run separately with `make e2e`, since it starts a dev server.
